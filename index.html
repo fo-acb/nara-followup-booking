@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nara Follow-Up Booking (Auto Fetch)</title>
+  <title>Nara Follow-Up Booking (Auto Fetch Fix)</title>
   <style>
     body {
       font-family: sans-serif;
@@ -99,17 +99,19 @@
     function loadData() {
       fetch("https://sheetdb.io/api/v1/tcohdrqa2wben")
         .then(res => res.json())
-        .then(data => {
-          data.forEach(row => {
-            addRow(
-              row.nama || "",
-              row.tanggal || "",
-              row.jenisReservasi || "",
-              row.jenisKonfirmasi || "",
-              row.noWA || "",
-              row.catatan || ""
-            );
-          });
+        .then(response => {
+          if (response.data) {
+            response.data.forEach(row => {
+              addRow(
+                row.nama || "",
+                row.tanggal || "",
+                row.jenisReservasi || "",
+                row.jenisKonfirmasi || "",
+                row.noWA || "",
+                row.catatan || ""
+              );
+            });
+          }
         })
         .catch(error => console.error("Gagal load data:", error));
     }
