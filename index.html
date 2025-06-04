@@ -120,8 +120,14 @@
         }
       })
       .then(response => response.text())
-      .then(data => console.log("Terkirim ke Google Sheets:", data))
-      .catch(error => console.error("Gagal:", error));
+      .then(data => {
+        alert("✅ Data berhasil dikirim ke Google Sheets!");
+        console.log("Terkirim:", data);
+      })
+      .catch(error => {
+        alert("❌ Gagal mengirim data.");
+        console.error("Gagal:", error);
+      });
     });
 
     function kirimWA(nama, tanggal, jenisReservasi, jenisKonfirmasi, noWA) {
