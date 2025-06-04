@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -53,8 +52,8 @@
   <form id="bookingForm">
     <input type="text" id="nama" placeholder="Nama Tamu" required />
     <input type="date" id="tanggal" required />
-    <input type="text" id="jenisReservasi" placeholder="Jenis Reservasi (contoh: Traveloka, Direct WA, dll)" required />
-    <input type="text" id="jenisKonfirmasi" placeholder="Jenis Konfirmasi (contoh: Akan transfer, Cek cuti, dll)" required />
+    <input type="text" id="jenisReservasi" placeholder="Jenis Reservasi" required />
+    <input type="text" id="jenisKonfirmasi" placeholder="Jenis Konfirmasi" required />
     <input type="text" id="noWA" placeholder="Nomor WhatsApp (cth: 6281234567890)" required />
     <textarea id="catatan" placeholder="Catatan Tambahan (opsional)"></textarea>
     <button type="submit">Tambah ke Daftar</button>
@@ -105,6 +104,24 @@
       `;
       tableBody.appendChild(tr);
       form.reset();
+
+      fetch("https://script.google.com/macros/s/AKfycbzLR6DW3ZACPAaNbZDe5UKTcHXveOY9MSjz0CITbf4Ydc34Zz8Tas91ZkqJ1kT2tq8q/exec", {
+        method: "POST",
+        body: JSON.stringify({
+          nama,
+          tanggal,
+          jenisReservasi,
+          jenisKonfirmasi,
+          noWA,
+          catatan
+        }),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      .then(response => response.text())
+      .then(data => console.log("Terkirim ke Google Sheets:", data))
+      .catch(error => console.error("Gagal:", error));
     });
 
     function kirimWA(nama, tanggal, jenisReservasi, jenisKonfirmasi, noWA) {
