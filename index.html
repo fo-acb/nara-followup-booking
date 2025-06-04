@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nara Follow-Up Booking (SheetDB)</title>
+  <title>Nara Follow-Up Booking (Auto Fetch)</title>
   <style>
     body {
       font-family: sans-serif;
@@ -78,16 +78,7 @@
     const form = document.getElementById('bookingForm');
     const tableBody = document.querySelector('#dataTable tbody');
 
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-
-      const nama = document.getElementById('nama').value;
-      const tanggal = document.getElementById('tanggal').value;
-      const jenisReservasi = document.getElementById('jenisReservasi').value;
-      const jenisKonfirmasi = document.getElementById('jenisKonfirmasi').value;
-      const noWA = document.getElementById('noWA').value;
-      const catatan = document.getElementById('catatan').value;
-
+    function addRow(nama, tanggal, jenisReservasi, jenisKonfirmasi, noWA, catatan) {
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td>${nama}</td>
@@ -103,6 +94,37 @@
         </td>
       `;
       tableBody.appendChild(tr);
+    }
+
+    function loadData() {
+      fetch("https://sheetdb.io/api/v1/tcohdrqa2wben")
+        .then(res => res.json())
+        .then(data => {
+          data.forEach(row => {
+            addRow(
+              row.nama || "",
+              row.tanggal || "",
+              row.jenisReservasi || "",
+              row.jenisKonfirmasi || "",
+              row.noWA || "",
+              row.catatan || ""
+            );
+          });
+        })
+        .catch(error => console.error("Gagal load data:", error));
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const nama = document.getElementById('nama').value;
+      const tanggal = document.getElementById('tanggal').value;
+      const jenisReservasi = document.getElementById('jenisReservasi').value;
+      const jenisKonfirmasi = document.getElementById('jenisKonfirmasi').value;
+      const noWA = document.getElementById('noWA').value;
+      const catatan = document.getElementById('catatan').value;
+
+      addRow(nama, tanggal, jenisReservasi, jenisKonfirmasi, noWA, catatan);
       form.reset();
 
       fetch("https://sheetdb.io/api/v1/tcohdrqa2wben", {
@@ -137,6 +159,9 @@
       const url = `https://wa.me/${noWA}?text=${encodeURIComponent(pesan)}`;
       window.open(url, '_blank');
     }
+
+    // Load data on page load
+    window.onload = loadData;
   </script>
 </body>
 </html>
